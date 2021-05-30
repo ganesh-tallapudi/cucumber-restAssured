@@ -1,12 +1,16 @@
 package stepDefinitions;
 
+import PetStorePojo.Root;
 import Utils.Helper;
+import Utils.PetStatus;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.mapper.ObjectMapper;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
@@ -18,6 +22,8 @@ import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class PetStoreAPITest {
@@ -114,10 +120,30 @@ public class PetStoreAPITest {
 
     @And("I should see a count with {int} for pet {string}")
     public void iShouldSeeACountWithForPet(int expectedPetCount, String petName) {
-
         obsPetCount = helper.getCountfromResponse("$[?(@.name==\"" + petName + "\")].name", response);
         Assert.assertEquals(expectedPetCount, obsPetCount);
         logger.info("Count of pets : " + obsPetCount);
     }
+
+    @Then("I should see a valid response with count {int};")
+    public void iShouldSeeAValidResponseWithCount(int expCount){
+          List<Object> response = Arrays.asList(jsonArray.stream().toArray());
+
+          long observedCount =response.stream().filter(helper.predicate(PetStatus.Available.toString())).count();
+
+             int obsCount = (int )observedCount;
+             Assert.assertEquals(expCount,obsCount);
+
+        }
+
+
+
+
+        private void performObjectMappingFrmJson(){
+           /* ObjectMapper om = new ObjectMapper();
+            Root root = om.readValue(myJsonString), Root.class);*/
+          Root petstorepojo =  new Gson().fromJson(response.getBody().asString(), Root.class);
+            System.out.println(petstorepojo.category.name);
+        }
 }
 

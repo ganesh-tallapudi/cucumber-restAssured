@@ -3,9 +3,8 @@ import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
-
 @CucumberOptions(features = "src/test/java/features",
-                 //glue = "src/test/java/stepDefinitions",
+                 glue = {"stepDefinitions","Utils"},
                  //tags="@Before or @SmokeTest",
                  plugin = {"pretty","html:target/Test_Reports.html"},
                  monochrome = true)

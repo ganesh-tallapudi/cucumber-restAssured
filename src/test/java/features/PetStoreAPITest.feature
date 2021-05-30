@@ -1,7 +1,7 @@
 Feature: Functional Tests for PetStore API
 #Note the below first 3 scenarios can be created as 1 scenario with scenario outline and by passing examples with different status
   Background:
-    Given The endpoint is up
+   # Given The endpoint is up
 
 @SmokeTest
   Scenario Outline: To verify the count of Pets with different status
@@ -36,3 +36,9 @@ Feature: Functional Tests for PetStore API
     Given The swagger service is down for endpoint "/v2/pet/findByStatus"
     When I read the Json response file
     Then I should verify the count for pet "doggie" to be 170
+
+
+  Scenario: To validate the petStore count when Application is down
+    Given The swagger service is down for endpoint "/v2/pet/findByStatus"
+    When I read the Json response file
+    Then I should see a valid response with count 170;
